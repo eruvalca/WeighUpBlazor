@@ -6,11 +6,14 @@
 
 <PageHeader headerText="Create a new Competition" />
 
-<div class="row">
-    <div class="col-12">
-        <div class="card shadow">
-            <div class="card-body">
-                <EditForm Model="@competition" OnValidSubmit="HandleSubmit">
+<EditForm Model="@competition" OnValidSubmit="HandleSubmit">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    Enter details
+                </div>
+                <div class="card-body">
                     <div class="form-group row">
                         <div class="col-12">
                             <label>Name</label>
@@ -41,31 +44,53 @@
                             <InputNumber @bind-Value="competition.PlayInAmount" class="form-control" step="0.01" />
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-6">
-                            <button @onclick='() => navigation.NavigateTo("/")' class="btn btn-secondary btn-block"
-                                    type="reset">
-                                Cancel
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-success btn-block" type="submit">
-                                @if (isFormSubmitting)
-                                {
-                                    <span class="spinner-border spinner-border-sm"></span><span> Submitting</span>
-                                }
-                                else
-                                {
-                                    <span>Submit</span>
-                                }
-                            </button>
-                        </div>
-                    </div>
-                </EditForm>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    Pick your weigh-in dates
+                </div>
+                <div class="card-body">
+                    @foreach (var deadline in competition.WeighInDeadlines.OrderBy(w => w.DeadlineDate))
+                    {
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <InputCheckbox @bind-Value="deadline.IsActive" class="form-check-input" />
+                                    <label class="form-check-label">@deadline.DeadlineDate.ToShortDateString()</label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-6">
+            <button @onclick='() => navigation.NavigateTo("/")' class="btn btn-secondary btn-block"
+                    type="reset">
+                Cancel
+            </button>
+        </div>
+        <div class="col-6">
+            <button class="btn btn-success btn-block" type="submit">
+                @if (isFormSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm"></span><span> Submitting</span>
+                }
+                else
+                {
+                    <span>Submit</span>
+                }
+            </button>
+        </div>
+    </div>
+</EditForm>
 
 @code {
     [CascadingParameter]
@@ -79,6 +104,22 @@
 
     protected override async Task OnInitializedAsync()
     {
+        competition.WeighInDeadlines = new List<WeighInDeadline>()
+    {
+            new WeighInDeadline()
+            {
+                DeadlineDate = competition.StartDate,
+                IsActive = true,
+                CompetitionId = competition.CompetitionId
+            },
+            new WeighInDeadline()
+            {
+                DeadlineDate = competition.EndDate,
+                IsActive = true,
+                CompetitionId = competition.CompetitionId
+            }
+        };
+
         var authState = await authenticationStateTask;
         var user = authState.User;
 
@@ -91,7 +132,21 @@
 
     private void HandleWeekChange(ChangeEventArgs e)
     {
-        competition.EndDate = competition.StartDate.AddDays(int.Parse(e.Value.ToString()) * 7);
+        var numberOfWeeks = int.Parse(e.Value.ToString());
+        competition.EndDate = competition.StartDate.AddDays(numberOfWeeks * 7);
+
+        for (int i = 0; i <= numberOfWeeks; i++)
+        {
+            if (!competition.WeighInDeadlines.Where(w => w.DeadlineDate == competition.StartDate.AddDays(i * 7)).Any())
+            {
+                competition.WeighInDeadlines.Add(new WeighInDeadline()
+                {
+                    DeadlineDate = competition.StartDate.AddDays(i * 7),
+                    IsActive = true,
+                    CompetitionId = competition.CompetitionId
+                });
+            }
+        }
     }
 
     private async Task HandleSubmit()

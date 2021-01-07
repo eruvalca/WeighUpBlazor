@@ -10,6 +10,7 @@ namespace WeighUpBlazor.Shared.Models
     {
         public int WeighInDeadlineId { get; set; }
         public DateTime DeadlineDate { get; set; }
+        public bool IsActive { get; set; }
 
         public int CompetitionId { get; set; }
     }
