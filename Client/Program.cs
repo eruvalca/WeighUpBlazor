@@ -31,6 +31,7 @@ namespace WeighUpBlazor.Client
                 builder.Configuration.Bind("AzureAdB2C", options.ProviderOptions.Authentication);
                 options.ProviderOptions.DefaultAccessTokenScopes.Add("https://weighup.onmicrosoft.com/api/api.access");
                 options.AuthenticationPaths.LogOutSucceededPath = "";
+                options.ProviderOptions.LoginMode = "redirect";
             });
 
             await builder.Build().RunAsync();
