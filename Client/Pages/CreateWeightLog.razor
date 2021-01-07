@@ -1,4 +1,4 @@
-﻿@page "/add-weight-log/{id:int}"
+﻿@page "/new-weight-log/{id:int}"
 @attribute [Authorize]
 
 @inject NavigationManager navigation
@@ -40,7 +40,16 @@
                                 </button>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-success btn-block" type="submit">Submit</button>
+                                <button class="btn btn-success btn-block" type="submit">
+                                    @if (isFormSubmitting)
+                                    {
+                                        <span class="spinner-border spinner-border-sm"></span><span> Submitting</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Submit</span>
+                                    }
+                                </button>
                             </div>
                         </div>
                     </EditForm>
@@ -67,6 +76,8 @@ else
     private Contestant contestant { get; set; }
     private WeightLog weightLog { get; set; } = new WeightLog();
 
+    private bool isFormSubmitting { get; set; } = false;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await authenticationStateTask;
@@ -85,6 +96,7 @@ else
 
     private async Task HandleSubmit()
     {
+        isFormSubmitting = true;
         weightLog = await weightLogsService.PostWeightLog(weightLog);
         navigation.NavigateTo($"competition-detail/{competition.CompetitionId}");
     }

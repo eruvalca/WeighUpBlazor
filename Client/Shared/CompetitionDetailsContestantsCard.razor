@@ -1,0 +1,83 @@
+﻿<div class="card shadow">
+    <div class="card-header">
+        <h5>Contestants</h5>
+    </div>
+    <div class="card-body">
+        @if (competition.Contestants.Any())
+        {
+            @if (!competition.Contestants.Any(c => c.UserId == userId))
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" @onclick="HandleContestantJoin">
+                            @if (isContestantJoining)
+                            {
+                                <span class="spinner-border spinner-border-sm"></span><span> Joining</span>
+                            }
+                            else
+                            {
+                                <span>Join</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+
+                <hr />
+            }
+
+            <div class="row">
+                <div class="col-12">
+                    <ul>
+                        @foreach (var contestant in competition.Contestants)
+                        {
+                            @if (contestant.UserId == userId && !contestant.WeightLogs.Any())
+                            {
+                                <li>@contestant.Username | <a href="/new-weight-log/@competition.CompetitionId">Weigh In</a></li>
+                            }
+                            else
+                            {
+                                <li>@contestant.Username</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button class="btn btn-secondary" @onclick="HandleContestantJoin">
+                        @if (isContestantJoining)
+                        {
+                            <span class="spinner-border spinner-border-sm"></span><span> Joining</span>
+                        }
+                        else
+                        {
+                            <span>Join</span>
+                        }
+                    </button>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>No contestants yet.</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Competition competition { get; set; }
+    [Parameter]
+    public string userId { get; set; }
+    [Parameter]
+    public bool isContestantJoining { get; set; }
+    [Parameter]
+    public EventCallback HandleContestantJoin { get; set; }
+}

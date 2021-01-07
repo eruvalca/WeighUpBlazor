@@ -1,0 +1,28 @@
+﻿<div class="card shadow">
+    <div class="card-header">
+        <h5>Competition Details</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <span><strong>Play In:</strong> @competition.PlayInAmount.ToString("C")</span>
+            </div>
+            <div class="col-6">
+                <span><strong>Number of weeks:</strong> @competition.NumberOfWeeks</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <span><strong>Start Date:</strong> @competition.StartDate.ToShortDateString()</span>
+            </div>
+            <div class="col-6">
+                <span><strong>End Date:</strong> @competition.EndDate.ToShortDateString()</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Competition competition { get; set; }
+}
