@@ -7,34 +7,27 @@
 
 @if (competitions != null)
 {
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow">
-                <div class="card-header">
-                    <h5>Competitions</h5>
+    <PageHeader headerText="Competitions" />
+
+    @if (competitions.Any())
+    {
+        <div class="row">
+            @foreach (var competition in competitions.OrderByDescending(c => c.StartDate))
+            {
+                <div class="col-12 col-md-4">
+                    <CompetitionQuickDetailsCard competition="@competition" />
                 </div>
-                <div class="card-body">
-                    @if (competitions.Any())
-                    {
-                        <ul>
-                            @foreach (var competition in competitions)
-                            {
-                                <li>@competition.Name | <a href="/competition-detail/@competition.CompetitionId">Details</a></li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <div class="row">
-                            <div class="col-12 text-center">
-                                <p>There are no competitions yet.</p>
-                            </div>
-                        </div>
-                    }
-                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12 text-center">
+                <p>There are no competitions yet.</p>
             </div>
         </div>
-    </div>
+    }
 }
 else
 {

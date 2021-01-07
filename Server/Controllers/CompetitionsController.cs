@@ -26,7 +26,9 @@ namespace WeighUpBlazor.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Competition>>> GetCompetitions()
         {
-            return await _context.Competitions.ToListAsync();
+            return await _context.Competitions
+                .Include(c => c.Contestants)
+                .ToListAsync();
         }
 
         [HttpGet("{id}")]
