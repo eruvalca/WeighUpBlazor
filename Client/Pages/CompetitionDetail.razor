@@ -1,0 +1,160 @@
+﻿@page "/competition-detail/{id:int}"
+@attribute [Authorize]
+
+@inject NavigationManager navigation
+@inject CompetitionsService competitionsService
+@inject ContestantsService contestantsService
+
+@if (competition != null)
+{
+    <PageHeader headerText="@competition.Name" />
+
+    <div class="row">
+        <div class="col-12">
+            <span class="text-muted">Created by: @competition.CreatedBy</span>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5>Info</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <span><strong>Play In:</strong> @competition.PlayInAmount.ToString("C")</span>
+                        </div>
+                        <div class="col-6">
+                            <span><strong>Number of weeks:</strong> @competition.NumberOfWeeks</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <span><strong>Start Date:</strong> @competition.StartDate.ToShortDateString()</span>
+                        </div>
+                        <div class="col-6">
+                            <span><strong>End Date:</strong> @competition.EndDate.ToShortDateString()</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5>Contestants</h5>
+                </div>
+                <div class="card-body">
+                    @if (competition.Contestants.Any())
+                    {
+                        @if (!competition.Contestants.Any(c => c.UserId == userId))
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-secondary" type="button">Join</button>
+                                </div>
+                            </div>
+
+                            <hr />
+                        }
+
+                        <div class="row">
+                            <div class="col-12">
+                                <ul>
+                                    @foreach (var contestant in competition.Contestants)
+                                    {
+                                        @if (contestant.UserId == userId && !contestant.WeightLogs.Any())
+                                        {
+                                            <li>@contestant.Username | <a href="/add-weight-log/@competition.CompetitionId">Weigh In</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li>@contestant.Username</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <button class="btn btn-secondary" @onclick="HandleContestantJoin" type="button">Join</button>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <p>No contestants yet.</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <LoadingSpinner />
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private string userId { get; set; }
+    private string username { get; set; }
+    private string firstName { get; set; }
+    private string lastName { get; set; }
+    private Competition competition { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            userId = user.FindFirst(c => c.Type == "sub").Value;
+            username = user.FindFirst(c => c.Type == "name").Value;
+            firstName = user.FindFirst(c => c.Type == "given_name").Value;
+            lastName = user.FindFirst(c => c.Type == "family_name").Value;
+        }
+
+        await GetCompetition();
+    }
+
+    private async Task GetCompetition()
+    {
+        competition = await competitionsService.GetCompetition(id);
+    }
+
+    private async Task HandleContestantJoin()
+    {
+        var contestant = new Contestant()
+        {
+            UserId = userId,
+            FirstName = firstName,
+            LastName = lastName,
+            Username = username,
+            CompetitionId = competition.CompetitionId
+        };
+
+        await contestantsService.PostContestant(contestant);
+        await GetCompetition();
+    }
+}

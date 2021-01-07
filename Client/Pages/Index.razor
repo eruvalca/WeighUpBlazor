@@ -1,7 +1,16 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@inject NavigationManager navigation
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<AuthorizeView>
+    <Authorized>
+        <CompetitionsList />
+    </Authorized>
+    <NotAuthorized>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button @onclick='() => navigation.NavigateTo("authentication/login")' class="btn btn-secondary" type="button">Log In</button>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

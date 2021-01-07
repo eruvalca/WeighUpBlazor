@@ -1,0 +1,43 @@
+﻿@attribute [Authorize]
+
+@inject NavigationManager navigation
+@inject CompetitionsService competitionsService
+@inject ContestantsService contestantsService
+@inject WeightLogsService weightLogsService
+
+@if (competitions != null)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5>Competitions</h5>
+                </div>
+                <div class="card-body">
+                    @if (competitions.Any())
+                    {
+                        <ul>
+                            @foreach (var competition in competitions)
+                            {
+                                <li>@competition.Name | <a href="/competition-detail/@competition.CompetitionId">Info</a></li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <LoadingSpinner />
+}
+
+@code {
+    private List<Competition> competitions { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        competitions = await competitionsService.GetCompetitions();
+    }
+}
