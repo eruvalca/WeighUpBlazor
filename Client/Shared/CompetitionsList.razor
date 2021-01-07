@@ -19,9 +19,17 @@
                         <ul>
                             @foreach (var competition in competitions)
                             {
-                                <li>@competition.Name | <a href="/competition-detail/@competition.CompetitionId">Info</a></li>
+                                <li>@competition.Name | <a href="/competition-detail/@competition.CompetitionId">Details</a></li>
                             }
                         </ul>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <p>There are no competitions yet.</p>
+                            </div>
+                        </div>
                     }
                 </div>
             </div>
