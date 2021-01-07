@@ -19,5 +19,6 @@ namespace WeighUpBlazor.Shared.Models
         public string CreatedByUserId { get; set; }
 
         public List<Contestant> Contestants { get; set; }
+        public List<WeighInDeadline> WeighInDeadlines { get; set; }
     }
 }

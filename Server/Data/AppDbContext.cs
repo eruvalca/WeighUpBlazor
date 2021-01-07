@@ -16,6 +16,7 @@ namespace WeighUpBlazor.Server.Data
         public DbSet<Competition> Competitions { get; set; }
         public DbSet<Contestant> Contestants { get; set; }
         public DbSet<WeightLog> WeightLogs { get; set; }
+        public DbSet<WeighInDeadline> WeighInDeadlines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

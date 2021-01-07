@@ -18,17 +18,20 @@
     <hr />
 
     <div class="row">
-        <div class="col-12">
-            <CompetitionAttributesCard competition="@competition" />
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <CompetitionDetailsContestantsCard competition="@competition"
-                                               userId="@userId"
-                                               isContestantJoining="@isContestantJoining"
-                                               HandleContestantJoin="@HandleContestantJoin" />
+        <div class="col-12 col-md-6">
+            <div class="row">
+                <div class="col-12">
+                    <CompetitionAttributesCard competition="@competition" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <CompetitionDetailsContestantsCard competition="@competition"
+                                                       userId="@userId"
+                                                       isContestantJoining="@isContestantJoining"
+                                                       HandleContestantJoin="@HandleContestantJoin" />
+                </div>
+            </div>
         </div>
     </div>
 }
