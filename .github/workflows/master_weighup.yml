@@ -19,6 +19,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
+        
+    - name: Clean
+      run: dotnet clean
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
