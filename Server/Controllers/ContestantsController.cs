@@ -77,7 +77,7 @@ namespace WeighUpBlazor.Server.Controllers
             _context.Contestants.Add(contestant);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetContestant", new { id = contestant.ContestantId }, contestant);
+            return CreatedAtAction("GetContestant", new { userId = contestant.UserId }, contestant);
         }
 
         [HttpDelete("{id}")]

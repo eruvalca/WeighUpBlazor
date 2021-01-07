@@ -52,52 +52,59 @@
                     <h5>Contestants</h5>
                 </div>
                 <div class="card-body">
-                    @if (competition.Contestants.Any())
+                    @if (!isContestantsLoading)
                     {
-                        @if (!competition.Contestants.Any(c => c.UserId == userId))
+                        @if (competition.Contestants.Any())
+                        {
+                            @if (!competition.Contestants.Any(c => c.UserId == userId))
+                            {
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <button class="btn btn-secondary" @onclick="HandleContestantJoin">Join</button>
+                                    </div>
+                                </div>
+
+                                <hr />
+                            }
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul>
+                                        @foreach (var contestant in competition.Contestants)
+                                        {
+                                            @if (contestant.UserId == userId && !contestant.WeightLogs.Any())
+                                            {
+                                                <li>@contestant.Username | <a href="/add-weight-log/@competition.CompetitionId">Weigh In</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li>@contestant.Username</li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                        else
                         {
                             <div class="row">
                                 <div class="col-12 text-center">
-                                    <button class="btn btn-secondary" type="button">Join</button>
+                                    <button class="btn btn-secondary" @onclick="HandleContestantJoin">Join</button>
                                 </div>
                             </div>
 
                             <hr />
-                        }
 
-                        <div class="row">
-                            <div class="col-12">
-                                <ul>
-                                    @foreach (var contestant in competition.Contestants)
-                                    {
-                                        @if (contestant.UserId == userId && !contestant.WeightLogs.Any())
-                                        {
-                                            <li>@contestant.Username | <a href="/add-weight-log/@competition.CompetitionId">Weigh In</a></li>
-                                        }
-                                        else
-                                        {
-                                            <li>@contestant.Username</li>
-                                        }
-                                    }
-                                </ul>
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <p>No contestants yet.</p>
+                                </div>
                             </div>
-                        </div>
+                        }
                     }
                     else
                     {
-                        <div class="row">
-                            <div class="col-12 text-center">
-                                <button class="btn btn-secondary" @onclick="HandleContestantJoin" type="button">Join</button>
-                            </div>
-                        </div>
-
-                        <hr />
-
-                        <div class="row">
-                            <div class="col-12 text-center">
-                                <p>No contestants yet.</p>
-                            </div>
-                        </div>
+                        <LoadingSpinner />
                     }
                 </div>
             </div>
@@ -122,6 +129,8 @@ else
     private string lastName { get; set; }
     private Competition competition { get; set; }
 
+    private bool isContestantsLoading = true;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await authenticationStateTask;
@@ -141,6 +150,7 @@ else
     private async Task GetCompetition()
     {
         competition = await competitionsService.GetCompetition(id);
+        isContestantsLoading = false;
     }
 
     private async Task HandleContestantJoin()
@@ -154,7 +164,7 @@ else
             CompetitionId = competition.CompetitionId
         };
 
-        await contestantsService.PostContestant(contestant);
+        contestant = await contestantsService.PostContestant(contestant);
         await GetCompetition();
     }
 }
