@@ -1,6 +1,6 @@
 ﻿@page "/"
 
-@inject NavigationManager navigation
+@inject NavigationManager Navigation
 
 <AuthorizeView>
     <Authorized>
@@ -9,7 +9,7 @@
     <NotAuthorized>
         <div class="row">
             <div class="col-12 text-center">
-                <button @onclick='() => navigation.NavigateTo("authentication/login")' class="btn btn-secondary" type="button">Log In</button>
+                <button @onclick='() => Navigation.NavigateTo("authentication/login")' class="btn btn-secondary" type="button">Log In</button>
             </div>
         </div>
     </NotAuthorized>

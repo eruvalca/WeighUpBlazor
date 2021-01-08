@@ -2,38 +2,38 @@
 
 <div class="card shadow">
     <div class="card-header">
-        <h5>@competition.Name</h5>
+        <h5>@Competition.Name</h5>
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col-12">
                 <ul>
                     <li>
-                        @if (DateTime.Today > competition.StartDate)
+                        @if (DateTime.Today > Competition.StartDate)
                         {
-                            <span>Started on @competition.StartDate.ToShortDateString()</span>
+                            <span>Started on @Competition.StartDate.ToShortDateString()</span>
                         }
                         else
                         {
-                            <span>Starts on @competition.StartDate.ToShortDateString()</span>
+                            <span>Starts on @Competition.StartDate.ToShortDateString()</span>
                         }
                     </li>
                     <li>
-                        @if (DateTime.Today > competition.EndDate)
+                        @if (DateTime.Today > Competition.EndDate)
                         {
-                            <span>Ended on @competition.EndDate.ToShortDateString()</span>
+                            <span>Ended on @Competition.EndDate.ToShortDateString()</span>
                         }
                         else
                         {
-                            <span>Ends on @competition.EndDate.ToShortDateString()</span>
+                            <span>Ends on @Competition.EndDate.ToShortDateString()</span>
                         }
                     </li>
                     <li>
-                        @if (competition.Contestants != null)
+                        @if (Competition.Contestants != null)
                         {
-                            @if (competition.Contestants.Any())
+                            @if (Competition.Contestants.Any())
                             {
-                                <span>@competition.Contestants.Count() contestants</span>
+                                <span>@Competition.Contestants.Count() contestants</span>
                             }
                             else
                             {
@@ -50,7 +50,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <button @onclick='() => navigation.NavigateTo($"/competition-detail/{competition.CompetitionId}")' class="btn btn-secondary btn-block" type="button">
+                <button @onclick='() => navigation.NavigateTo($"/competition-detail/{Competition.CompetitionId}")' class="btn btn-secondary btn-block" type="button">
                     Details
                 </button>
             </div>
@@ -60,5 +60,5 @@
 
 @code {
     [Parameter]
-    public Competition competition { get; set; }
+    public Competition Competition { get; set; }
 }

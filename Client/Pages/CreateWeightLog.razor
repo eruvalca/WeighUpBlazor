@@ -1,14 +1,8 @@
-﻿@page "/new-weight-log/{id:int}"
-@attribute [Authorize]
+﻿@page "/new-weight-log/{CompetitionId:int}"
 
-@inject NavigationManager navigation
-@inject CompetitionsService competitionsService
-@inject ContestantsService contestantsService
-@inject WeightLogsService weightLogsService
-
-@if (competition != null && contestant != null)
+@if (Competition != null && Contestant != null)
 {
-    <PageHeader headerText="Weigh In" />
+    <PageHeader HeaderText="Weigh In" />
 
     <hr />
 
@@ -16,32 +10,32 @@
         <div class="col-12">
             <div class="card shadow">
                 <div class="card-header">
-                    <h5>Competition: @competition.Name</h5>
+                    <h5>Competition: @Competition.Name</h5>
                 </div>
                 <div class="card-body">
-                    <EditForm Model="@weightLog" OnValidSubmit="HandleSubmit">
+                    <EditForm Model="@WeightLog" OnValidSubmit="HandleSubmit">
                         <div class="form-group row">
                             <div class="col-12">
                                 <label>Date</label>
-                                <InputDate @bind-Value="weightLog.MeasurementDate" class="form-control" />
+                                <InputDate @bind-Value="WeightLog.MeasurementDate" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-12">
                                 <label>Weight</label>
-                                <InputNumber @bind-Value="weightLog.WeightMeasurement" class="form-control" />
+                                <InputNumber @bind-Value="WeightLog.WeightMeasurement" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-6">
-                                <button @onclick='() => navigation.NavigateTo($"/competition-detail/{competition.CompetitionId}")' class="btn btn-secondary btn-block"
+                                <button @onclick='() => Navigation.NavigateTo($"/competition-detail/{Competition.CompetitionId}")' class="btn btn-secondary btn-block"
                                         type="reset">
                                     Cancel
                                 </button>
                             </div>
                             <div class="col-6">
                                 <button class="btn btn-success btn-block" type="submit">
-                                    @if (isFormSubmitting)
+                                    @if (IsFormSubmitting)
                                     {
                                         <span class="spinner-border spinner-border-sm"></span><span> Submitting</span>
                                     }
@@ -61,43 +55,4 @@
 else
 {
     <LoadingSpinner />
-}
-
-@code {
-    [Parameter]
-    public int id { get; set; }
-
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
-
-    private string userId { get; set; }
-    private string username { get; set; }
-    private Competition competition { get; set; } = new Competition();
-    private Contestant contestant { get; set; }
-    private WeightLog weightLog { get; set; } = new WeightLog();
-
-    private bool isFormSubmitting { get; set; } = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
-        {
-            userId = user.FindFirst(c => c.Type == "sub").Value;
-            username = user.FindFirst(c => c.Type == "name").Value;
-        }
-
-        contestant = await contestantsService.GetContestant(userId);
-        weightLog.ContestantId = contestant.ContestantId;
-        competition = await competitionsService.GetCompetition(id);
-    }
-
-    private async Task HandleSubmit()
-    {
-        isFormSubmitting = true;
-        weightLog = await weightLogsService.PostWeightLog(weightLog);
-        navigation.NavigateTo($"competition-detail/{competition.CompetitionId}");
-    }
 }

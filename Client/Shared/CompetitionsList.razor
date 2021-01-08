@@ -1,21 +1,15 @@
-﻿@attribute [Authorize]
-
-@inject NavigationManager navigation
-@inject CompetitionsService competitionsService
-@inject ContestantsService contestantsService
-@inject WeightLogsService weightLogsService
-
-@if (competitions != null)
+﻿
+@if (Competitions != null)
 {
-    <PageHeader headerText="Competitions" />
+    <PageHeader HeaderText="Competitions" />
 
-    @if (competitions.Any())
+    @if (Competitions.Any())
     {
         <div class="row">
-            @foreach (var competition in competitions.OrderByDescending(c => c.StartDate))
+            @foreach (var competition in Competitions.OrderByDescending(c => c.StartDate))
             {
                 <div class="col-12 col-md-4">
-                    <CompetitionQuickDetailsCard competition="@competition" />
+                    <CompetitionQuickDetailsCard Competition="@competition" />
                 </div>
             }
         </div>
@@ -32,13 +26,4 @@
 else
 {
     <LoadingSpinner />
-}
-
-@code {
-    private List<Competition> competitions { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        competitions = await competitionsService.GetCompetitions();
-    }
 }

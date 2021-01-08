@@ -3,14 +3,14 @@
         <h5>Contestants</h5>
     </div>
     <div class="card-body">
-        @if (competition.Contestants.Any())
+        @if (Competition.Contestants.Any())
         {
-            @if (!competition.Contestants.Any(c => c.UserId == userId) && DateTime.Today <= competition.StartDate)
+            @if (!Competition.Contestants.Any(c => c.UserId == UserId) && DateTime.Today <= Competition.StartDate)
             {
                 <div class="row">
                     <div class="col-12 text-center">
                         <button class="btn btn-secondary" @onclick="HandleContestantJoin">
-                            @if (isContestantJoining)
+                            @if (IsContestantJoining)
                             {
                                 <span class="spinner-border spinner-border-sm"></span><span> Joining</span>
                             }
@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-12">
                     <ul>
-                        @foreach (var contestant in competition.Contestants)
+                        @foreach (var contestant in Competition.Contestants)
                         {
                             <li>@contestant.Username</li>
                         }
@@ -38,12 +38,12 @@
         }
         else
         {
-            @if (DateTime.Today <= competition.StartDate)
+            @if (DateTime.Today <= Competition.StartDate)
             {
                 <div class="row">
                     <div class="col-12 text-center">
                         <button class="btn btn-secondary" @onclick="HandleContestantJoin">
-                            @if (isContestantJoining)
+                            @if (IsContestantJoining)
                             {
                                 <span class="spinner-border spinner-border-sm"></span><span> Joining</span>
                             }
@@ -69,11 +69,11 @@
 
 @code {
     [Parameter]
-    public Competition competition { get; set; }
+    public Competition Competition { get; set; }
     [Parameter]
-    public string userId { get; set; }
+    public string UserId { get; set; }
     [Parameter]
-    public bool isContestantJoining { get; set; }
+    public bool IsContestantJoining { get; set; }
     [Parameter]
     public EventCallback HandleContestantJoin { get; set; }
 }

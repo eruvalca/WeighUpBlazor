@@ -1,17 +1,12 @@
-﻿@page "/competition-detail/{id:int}"
-@attribute [Authorize]
+﻿@page "/competition-detail/{CompetitionId:int}"
 
-@inject NavigationManager navigation
-@inject CompetitionsService competitionsService
-@inject ContestantsService contestantsService
-
-@if (competition != null)
+@if (Competition != null)
 {
-    <PageHeader headerText="@competition.Name" />
+    <PageHeader HeaderText="@Competition.Name" />
 
     <div class="row">
         <div class="col-12">
-            <span class="text-muted">Created by: @competition.CreatedBy</span>
+            <span class="text-muted">Created by: @Competition.CreatedBy</span>
         </div>
     </div>
 
@@ -21,14 +16,14 @@
         <div class="col-12 col-md-6">
             <div class="row">
                 <div class="col-12">
-                    <CompetitionAttributesCard competition="@competition" />
+                    <CompetitionAttributesCard Competition="@Competition" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <CompetitionDetailsContestantsCard competition="@competition"
-                                                       userId="@userId"
-                                                       isContestantJoining="@isContestantJoining"
+                    <CompetitionDetailsContestantsCard Competition="@Competition"
+                                                       UserId="@UserId"
+                                                       IsContestantJoining="@IsContestantJoining"
                                                        HandleContestantJoin="@HandleContestantJoin" />
                 </div>
             </div>
@@ -38,58 +33,4 @@
 else
 {
     <LoadingSpinner />
-}
-
-@code {
-    [Parameter]
-    public int id { get; set; }
-
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
-
-    private string userId { get; set; }
-    private string username { get; set; }
-    private string firstName { get; set; }
-    private string lastName { get; set; }
-    private Competition competition { get; set; }
-
-    private bool isContestantJoining { get; set; } = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
-        {
-            userId = user.FindFirst(c => c.Type == "sub").Value;
-            username = user.FindFirst(c => c.Type == "name").Value;
-            firstName = user.FindFirst(c => c.Type == "given_name").Value;
-            lastName = user.FindFirst(c => c.Type == "family_name").Value;
-        }
-
-        await GetCompetition();
-    }
-
-    private async Task GetCompetition()
-    {
-        competition = await competitionsService.GetCompetition(id);
-        isContestantJoining = false;
-    }
-
-    public async Task HandleContestantJoin()
-    {
-        isContestantJoining = true;
-        var contestant = new Contestant()
-        {
-            UserId = userId,
-            FirstName = firstName,
-            LastName = lastName,
-            Username = username,
-            CompetitionId = competition.CompetitionId
-        };
-
-        contestant = await contestantsService.PostContestant(contestant);
-        await GetCompetition();
-    }
 }
