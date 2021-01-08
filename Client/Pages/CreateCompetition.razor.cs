@@ -33,25 +33,25 @@ namespace WeighUpBlazor.Client.Pages
         }
         private string UserId { get; set; }
         private string Username { get; set; }
-        private Competition Competition { get; set; } = new Competition();
+        private Competition NewCompetition { get; set; } = new Competition();
         private bool IsFormSubmitting { get; set; } = false;
 
         protected override async Task OnInitializedAsync()
         {
             _startDate = DateTime.Today;
-            Competition.WeighInDeadlines = new List<WeighInDeadline>
+            NewCompetition.WeighInDeadlines = new List<WeighInDeadline>
             {
                 new WeighInDeadline()
                 {
-                    DeadlineDate = Competition.StartDate,
+                    DeadlineDate = NewCompetition.StartDate,
                     IsActive = true,
-                    CompetitionId = Competition.CompetitionId
+                    CompetitionId = NewCompetition.CompetitionId
                 },
                 new WeighInDeadline()
                 {
-                    DeadlineDate = Competition.EndDate,
+                    DeadlineDate = NewCompetition.EndDate,
                     IsActive = true,
-                    CompetitionId = Competition.CompetitionId
+                    CompetitionId = NewCompetition.CompetitionId
                 }
             };
 
@@ -67,32 +67,32 @@ namespace WeighUpBlazor.Client.Pages
 
         private void HandleStartDateChange()
         {
-            Competition.StartDate = StartDate;
-            Competition.EndDate = Competition.StartDate.AddDays(Competition.NumberOfWeeks * 7);
+            NewCompetition.StartDate = StartDate;
+            NewCompetition.EndDate = NewCompetition.StartDate.AddDays(NewCompetition.NumberOfWeeks * 7);
 
-            Competition.WeighInDeadlines = new List<WeighInDeadline>
+            NewCompetition.WeighInDeadlines = new List<WeighInDeadline>
             {
                 new WeighInDeadline()
                 {
-                    DeadlineDate = Competition.StartDate,
+                    DeadlineDate = NewCompetition.StartDate,
                     IsActive = true,
-                    CompetitionId = Competition.CompetitionId
+                    CompetitionId = NewCompetition.CompetitionId
                 },
                 new WeighInDeadline()
                 {
-                    DeadlineDate = Competition.EndDate,
+                    DeadlineDate = NewCompetition.EndDate,
                     IsActive = true,
-                    CompetitionId = Competition.CompetitionId
+                    CompetitionId = NewCompetition.CompetitionId
                 }
             };
 
-            for (int i = 1; i < Competition.NumberOfWeeks; i++)
+            for (int i = 1; i < NewCompetition.NumberOfWeeks; i++)
             {
-                Competition.WeighInDeadlines.Add(new WeighInDeadline()
+                NewCompetition.WeighInDeadlines.Add(new WeighInDeadline()
                 {
-                    DeadlineDate = Competition.StartDate.AddDays(i * 7),
+                    DeadlineDate = NewCompetition.StartDate.AddDays(i * 7),
                     IsActive = true,
-                    CompetitionId = Competition.CompetitionId
+                    CompetitionId = NewCompetition.CompetitionId
                 });
             }
         }
@@ -100,31 +100,31 @@ namespace WeighUpBlazor.Client.Pages
         private void HandleWeekChange(ChangeEventArgs e)
         {
             var numberOfWeeks = int.Parse(e.Value.ToString());
-            Competition.EndDate = Competition.StartDate.AddDays(numberOfWeeks * 7);
+            NewCompetition.EndDate = NewCompetition.StartDate.AddDays(numberOfWeeks * 7);
 
-            Competition.WeighInDeadlines = new List<WeighInDeadline>
+            NewCompetition.WeighInDeadlines = new List<WeighInDeadline>
             {
                 new WeighInDeadline()
                 {
-                    DeadlineDate = Competition.StartDate,
+                    DeadlineDate = NewCompetition.StartDate,
                     IsActive = true,
-                    CompetitionId = Competition.CompetitionId
+                    CompetitionId = NewCompetition.CompetitionId
                 },
                 new WeighInDeadline()
                 {
-                    DeadlineDate = Competition.EndDate,
+                    DeadlineDate = NewCompetition.EndDate,
                     IsActive = true,
-                    CompetitionId = Competition.CompetitionId
+                    CompetitionId = NewCompetition.CompetitionId
                 }
             };
 
             for (int i = 1; i < numberOfWeeks; i++)
             {
-                Competition.WeighInDeadlines.Add(new WeighInDeadline()
+                NewCompetition.WeighInDeadlines.Add(new WeighInDeadline()
                 {
-                    DeadlineDate = Competition.StartDate.AddDays(i * 7),
+                    DeadlineDate = NewCompetition.StartDate.AddDays(i * 7),
                     IsActive = true,
-                    CompetitionId = Competition.CompetitionId
+                    CompetitionId = NewCompetition.CompetitionId
                 });
             }
         }
@@ -132,11 +132,11 @@ namespace WeighUpBlazor.Client.Pages
         private async Task HandleSubmit()
         {
             IsFormSubmitting = true;
-            Competition.CreatedBy = Username;
-            Competition.CreatedByUserId = UserId;
+            NewCompetition.CreatedBy = Username;
+            NewCompetition.CreatedByUserId = UserId;
 
-            Competition = await CompetitionsService.PostCompetition(Competition);
-            Navigation.NavigateTo($"competition-detail/{Competition.CompetitionId}");
+            NewCompetition = await CompetitionsService.PostCompetition(NewCompetition);
+            Navigation.NavigateTo($"competition-detail/{NewCompetition.CompetitionId}");
         }
     }
 }
