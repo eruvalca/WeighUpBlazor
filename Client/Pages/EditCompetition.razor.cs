@@ -11,12 +11,15 @@ using WeighUpBlazor.Shared.Models;
 namespace WeighUpBlazor.Client.Pages
 {
     [Authorize]
-    public partial class CreateCompetition
+    public partial class EditCompetition
     {
         [Inject]
         private NavigationManager Navigation { get; set; }
         [Inject]
         private CompetitionsService CompetitionsService { get; set; }
+
+        [Parameter]
+        public int CompetitionId { get; set; }
 
         [CascadingParameter]
         private Task<AuthenticationState> AuthenticationStateTask { get; set; }
@@ -43,28 +46,12 @@ namespace WeighUpBlazor.Client.Pages
         }
         private string UserId { get; set; }
         private string Username { get; set; }
-        private Competition Competition { get; set; } = new Competition();
+        private Competition Competition { get; set; }
         private bool IsFormSubmitting { get; set; } = false;
+        private bool IsDeleting { get; set; } = false;
 
         protected override async Task OnInitializedAsync()
         {
-            _startDate = DateTime.Today;
-            Competition.WeighInDeadlines = new List<WeighInDeadline>
-            {
-                new WeighInDeadline()
-                {
-                    DeadlineDate = Competition.StartDate,
-                    IsActive = true,
-                    CompetitionId = Competition.CompetitionId
-                },
-                new WeighInDeadline()
-                {
-                    DeadlineDate = Competition.EndDate,
-                    IsActive = true,
-                    CompetitionId = Competition.CompetitionId
-                }
-            };
-
             var authState = await AuthenticationStateTask;
             var user = authState.User;
 
@@ -73,6 +60,9 @@ namespace WeighUpBlazor.Client.Pages
                 UserId = user.FindFirst(c => c.Type == "sub").Value;
                 Username = user.FindFirst(c => c.Type == "name").Value;
             }
+
+            Competition = await CompetitionsService.GetCompetition(CompetitionId);
+            _startDate = Competition.StartDate;
         }
 
         private void HandleStartDateChange()
@@ -142,11 +132,17 @@ namespace WeighUpBlazor.Client.Pages
         private async Task HandleSubmit()
         {
             IsFormSubmitting = true;
-            Competition.CreatedBy = Username;
-            Competition.CreatedByUserId = UserId;
 
-            Competition = await CompetitionsService.PostCompetition(Competition);
+            await CompetitionsService.PutCompetition(Competition.CompetitionId, Competition);
             Navigation.NavigateTo($"/competition-detail/{Competition.CompetitionId}");
+        }
+
+        private async Task HandleDelete()
+        {
+            IsDeleting = true;
+
+            await CompetitionsService.DeleteCompetition(CompetitionId);
+            Navigation.NavigateTo("/");
         }
     }
 }

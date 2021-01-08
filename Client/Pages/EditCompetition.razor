@@ -1,0 +1,122 @@
+﻿@page "/edit-competition/{CompetitionId:int}"
+
+<PageHeader HeaderText="Edit Competition" />
+
+@if (Competition != null)
+{
+    <EditForm Model="@Competition" OnValidSubmit="HandleSubmit">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5>Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>Name</label>
+                                <InputText @bind-Value="Competition.Name" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>Start Date</label>
+                                <InputDate @bind-Value="StartDate" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>Number of Weeks</label>
+                                <InputNumber @bind-Value="Competition.NumberOfWeeks" @oninput="HandleWeekChange" class="form-control" min="1" max="52" step="1" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>End Date</label>
+                                <InputDate @bind-Value="Competition.EndDate" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>Play In Amount</label>
+                                <InputNumber @bind-Value="Competition.PlayInAmount" class="form-control" step="0.01" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5>Weigh-in dates</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var deadline in Competition.WeighInDeadlines.OrderBy(w => w.DeadlineDate))
+                        {
+                            @if (deadline.DeadlineDate == Competition.StartDate || deadline.DeadlineDate == Competition.EndDate)
+                            {
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <InputCheckbox @bind-Value="deadline.IsActive" class="form-check-input" disabled />
+                                            <label class="form-check-label">@deadline.DeadlineDate.ToShortDateString()</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <InputCheckbox @bind-Value="deadline.IsActive" class="form-check-input" />
+                                            <label class="form-check-label">@deadline.DeadlineDate.ToShortDateString()</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-12">
+                <button @onclick="HandleDelete" class="btn btn-danger btn-block" type="button">
+                    @if (IsDeleting)
+                    {
+                        <span class="spinner-border spinner-border-sm"></span><span> Deleting</span>
+                    }
+                    else
+                    {
+                        <span>Delete</span>
+                    }
+                </button>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <button @onclick='() => Navigation.NavigateTo("/")' class="btn btn-secondary btn-block"
+                        type="reset">
+                    Cancel
+                </button>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-success btn-block" type="submit">
+                    @if (IsFormSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm"></span><span> Submitting</span>
+                    }
+                    else
+                    {
+                        <span>Submit</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </EditForm>
+}
+else
+{
+    <LoadingSpinner />
+}

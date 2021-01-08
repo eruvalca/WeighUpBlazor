@@ -2,7 +2,7 @@
 
 <PageHeader HeaderText="Create a new Competition" />
 
-<EditForm Model="@NewCompetition" OnValidSubmit="HandleSubmit">
+<EditForm Model="@Competition" OnValidSubmit="HandleSubmit">
     <div class="row">
         <div class="col-12 col-md-6">
             <div class="card shadow">
@@ -13,7 +13,7 @@
                     <div class="form-group row">
                         <div class="col-12">
                             <label>Name</label>
-                            <InputText @bind-Value="NewCompetition.Name" class="form-control" />
+                            <InputText @bind-Value="Competition.Name" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -25,19 +25,19 @@
                     <div class="form-group row">
                         <div class="col-12">
                             <label>Number of Weeks</label>
-                            <InputNumber @bind-Value="NewCompetition.NumberOfWeeks" @oninput="HandleWeekChange" class="form-control" min="1" max="52" step="1" />
+                            <InputNumber @bind-Value="NumberOfWeeks" class="form-control" min="1" max="52" step="1" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-12">
                             <label>End Date</label>
-                            <InputDate @bind-Value="NewCompetition.EndDate" class="form-control" readonly />
+                            <InputDate @bind-Value="Competition.EndDate" class="form-control" readonly />
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-12">
                             <label>Play In Amount</label>
-                            <InputNumber @bind-Value="NewCompetition.PlayInAmount" class="form-control" step="0.01" />
+                            <InputNumber @bind-Value="Competition.PlayInAmount" class="form-control" step="0.01" />
                         </div>
                     </div>
                 </div>
@@ -49,9 +49,9 @@
                     <h5>Pick your weigh-in dates</h5>
                 </div>
                 <div class="card-body">
-                    @foreach (var deadline in NewCompetition.WeighInDeadlines.OrderBy(w => w.DeadlineDate))
+                    @foreach (var deadline in Competition.WeighInDeadlines.OrderBy(w => w.DeadlineDate))
                     {
-                        @if (deadline.DeadlineDate == NewCompetition.StartDate || deadline.DeadlineDate == NewCompetition.EndDate)
+                        @if (deadline.DeadlineDate == Competition.StartDate || deadline.DeadlineDate == Competition.EndDate)
                         {
                             <div class="form-group row">
                                 <div class="col-12">

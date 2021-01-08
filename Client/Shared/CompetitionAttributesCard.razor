@@ -1,4 +1,6 @@
-﻿<div class="card shadow">
+﻿@inject NavigationManager Navigation
+
+<div class="card shadow">
     <div class="card-header">
         <h5>Competition Details</h5>
     </div>
@@ -17,6 +19,14 @@
             </div>
             <div class="col-6">
                 <span><strong>End Date:</strong> @Competition.EndDate.ToShortDateString()</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <button @onclick='() => Navigation.NavigateTo($"/edit-competition/{Competition.CompetitionId}")' 
+                        class="btn btn-secondary btn-block" type="button">
+                    Edit
+                </button>
             </div>
         </div>
     </div>

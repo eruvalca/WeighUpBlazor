@@ -44,6 +44,7 @@ namespace WeighUpBlazor.Server.Controllers
             return await _context.Competitions
                 .Include(c => c.Contestants)
                 .ThenInclude(c => c.WeightLogs)
+                .Include(c => c.WeighInDeadlines)
                 .FirstOrDefaultAsync(c => c.CompetitionId == id);
         }
 
@@ -56,6 +57,18 @@ namespace WeighUpBlazor.Server.Controllers
             }
 
             _context.Entry(competition).State = EntityState.Modified;
+
+            foreach (var deadline in competition.WeighInDeadlines)
+            {
+                if (deadline.WeighInDeadlineId > 0)
+                {
+                    _context.Entry(deadline).State = EntityState.Modified;
+                }
+                else
+                {
+                    _context.WeighInDeadlines.Add(deadline);
+                }
+            }
 
             try
             {
