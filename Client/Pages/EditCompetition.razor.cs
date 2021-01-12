@@ -17,6 +17,8 @@ namespace WeighUpBlazor.Client.Pages
         private NavigationManager Navigation { get; set; }
         [Inject]
         private CompetitionsService CompetitionsService { get; set; }
+        [Inject]
+        private WeighInDeadlinesService WeighInDeadlinesService { get; set; }
 
         [Parameter]
         public int CompetitionId { get; set; }
@@ -62,7 +64,9 @@ namespace WeighUpBlazor.Client.Pages
             }
 
             Competition = await CompetitionsService.GetCompetition(CompetitionId);
+
             _startDate = Competition.StartDate;
+            _numberOfWeeks = Competition.NumberOfWeeks;
         }
 
         private void HandleStartDateChange()
@@ -133,6 +137,7 @@ namespace WeighUpBlazor.Client.Pages
         {
             IsFormSubmitting = true;
 
+            await WeighInDeadlinesService.DeleteWeighInDeadlineRangeByCompetition(CompetitionId);
             await CompetitionsService.PutCompetition(Competition.CompetitionId, Competition);
             Navigation.NavigateTo($"/competition-detail/{Competition.CompetitionId}");
         }

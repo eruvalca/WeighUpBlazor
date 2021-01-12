@@ -49,6 +49,7 @@ namespace WeighUpBlazor.Client.Pages
         protected override async Task OnInitializedAsync()
         {
             _startDate = DateTime.Today;
+            _numberOfWeeks = 1;
             Competition.WeighInDeadlines = new List<WeighInDeadline>
             {
                 new WeighInDeadline()

@@ -60,15 +60,10 @@ namespace WeighUpBlazor.Server.Controllers
 
             foreach (var deadline in competition.WeighInDeadlines)
             {
-                if (deadline.WeighInDeadlineId > 0)
-                {
-                    _context.Entry(deadline).State = EntityState.Modified;
-                }
-                else
-                {
-                    _context.WeighInDeadlines.Add(deadline);
-                }
+                deadline.WeighInDeadlineId = 0;
             }
+
+            await _context.WeighInDeadlines.AddRangeAsync(competition.WeighInDeadlines);
 
             try
             {
