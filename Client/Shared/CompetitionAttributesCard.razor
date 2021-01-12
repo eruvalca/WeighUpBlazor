@@ -1,5 +1,4 @@
-﻿@inject NavigationManager Navigation
-
+﻿
 <div class="card shadow">
     <div class="card-header">
         <h5>Competition Details</h5>
@@ -21,7 +20,63 @@
                 <span><strong>End Date:</strong> @Competition.EndDate.ToShortDateString()</span>
             </div>
         </div>
-        @if (DateTime.Today < Competition.WeighInDeadlines.Where(w => w.IsActive).OrderBy(w => w.DeadlineDate).FirstOrDefault().DeadlineDate)
+
+        <hr />
+
+        @if (Competition.Contestants.Any())
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>@Competition.Contestants.Count() current contestant(s)</p>
+                </div>
+            </div>
+
+            @if (!Competition.Contestants.Any(c => c.UserId == UserId) && DateTime.Today <= Competition.StartDate)
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" @onclick="HandleContestantJoin">
+                            @if (IsContestantJoining)
+                            {
+                                <span class="spinner-border spinner-border-sm"></span><span> Joining</span>
+                            }
+                            else
+                            {
+                                <span>Join</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>@Competition.Contestants.Count() current contestants</p>
+                </div>
+            </div>
+
+            @if (DateTime.Today <= Competition.StartDate)
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" @onclick="HandleContestantJoin">
+                            @if (IsContestantJoining)
+                            {
+                                <span class="spinner-border spinner-border-sm"></span><span> Joining</span>
+                            }
+                            else
+                            {
+                                <span>Join</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (DateTime.Today < Competition.StartDate)
         {
             <div class="row">
                 <div class="col-12">
@@ -34,8 +89,3 @@
         }
     </div>
 </div>
-
-@code {
-    [Parameter]
-    public Competition Competition { get; set; }
-}

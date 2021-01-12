@@ -14,61 +14,16 @@ namespace WeighUpBlazor.Client.Pages
     public partial class CompetitionDetail
     {
         [Inject]
-        private NavigationManager Navigation { get; set; }
-        [Inject]
         private CompetitionsService CompetitionsService { get; set; }
-        [Inject]
-        private ContestantsService ContestantsService { get; set; }
 
         [Parameter]
         public int CompetitionId { get; set; }
 
-        [CascadingParameter]
-        private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-
-        private string UserId { get; set; }
-        private string Username { get; set; }
-        private string FirstName { get; set; }
-        private string LastName { get; set; }
         private Competition Competition { get; set; }
-        private bool IsContestantJoining { get; set; } = false;
 
         protected override async Task OnInitializedAsync()
         {
-            var authState = await AuthenticationStateTask;
-            var user = authState.User;
-
-            if (user.Identity.IsAuthenticated)
-            {
-                UserId = user.FindFirst(c => c.Type == "sub").Value;
-                Username = user.FindFirst(c => c.Type == "name").Value;
-                FirstName = user.FindFirst(c => c.Type == "given_name").Value;
-                LastName = user.FindFirst(c => c.Type == "family_name").Value;
-            }
-
-            await GetCompetition();
-        }
-
-        private async Task GetCompetition()
-        {
             Competition = await CompetitionsService.GetCompetition(CompetitionId);
-            IsContestantJoining = false;
-        }
-
-        public async Task HandleContestantJoin()
-        {
-            IsContestantJoining = true;
-            var contestant = new Contestant()
-            {
-                UserId = UserId,
-                FirstName = FirstName,
-                LastName = LastName,
-                Username = Username,
-                CompetitionId = Competition.CompetitionId
-            };
-
-            contestant = await ContestantsService.PostContestant(contestant);
-            await GetCompetition();
         }
     }
 }
