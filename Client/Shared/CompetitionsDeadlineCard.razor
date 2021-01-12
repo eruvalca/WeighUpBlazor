@@ -12,11 +12,12 @@
                 {
                     @if (Competition.Contestants.Any(c => c.UserId == UserId))
                     {
-                        @if (Competition.Contestants.FirstOrDefault(c => c.UserId == UserId).WeightLogs.Any(w => w.MeasurementDate == DateTime.Today))
+                        @if (Competition.Contestants.FirstOrDefault(c => c.UserId == UserId).WeightLogs.Any(w => w.MeasurementDate.Date == DateTime.Today))
                         {
                             <div class="row">
                                 <div class="col-12 text-center">
-                                    <p>You've already weighed in today</p>
+                                    <p>The next deadline is today</p>
+                                    <p>You have already weighed in</p>
                                 </div>
                             </div>
                         }
@@ -50,10 +51,10 @@
                     @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate > DateTime.Today))
                     {
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 text-center">
                                 <p>Remaining Deadlines</p>
                                 <ul>
-                                    @foreach (var deadline in Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today))
+                                    @foreach (var deadline in Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today).OrderBy(w => w.DeadlineDate))
                                     {
                                         <li>@deadline.DeadlineDate.ToShortDateString()</li>
                                     }
