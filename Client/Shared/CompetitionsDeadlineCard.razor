@@ -1,0 +1,126 @@
+﻿
+<div class="card shadow">
+    <div class="card-header">
+        <h5>Weigh In Deadlines</h5>
+    </div>
+    <div class="card-body">
+        @if (Competition != null)
+        {
+            @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate >= DateTime.Today))
+            {
+                @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate == DateTime.Today))
+                {
+                    @if (Competition.Contestants.Any(c => c.UserId == UserId))
+                    {
+                        @if (Competition.Contestants.FirstOrDefault(c => c.UserId == UserId).WeightLogs.Any(w => w.MeasurementDate == DateTime.Today))
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <p>You've already weighed in today</p>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <p>Weigh in by 9pm</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button @onclick='() => Navigation.NavigateTo($"new-weight-log/{Competition.CompetitionId}")' class="btn btn-secondary btn-block" type="button">
+                                        Weigh In
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <p>Next deadline is today at 9pm</p>
+                            </div>
+                        </div>
+                    }
+
+                    <hr />
+
+                    @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate > DateTime.Today))
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p>Remaining Deadlines</p>
+                                <ul>
+                                    @foreach (var deadline in Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today))
+                                    {
+                                        <li>@deadline.DeadlineDate.ToShortDateString()</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <p>There are no more remaining deadlines</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <p>Next deadline is <strong>@Competition.WeighInDeadlines.OrderBy(w => w.DeadlineDate).FirstOrDefault().DeadlineDate.ToShortDateString()</strong></p>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate > Competition.WeighInDeadlines.OrderBy(w => w.DeadlineDate).FirstOrDefault().DeadlineDate))
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p>Remaining Deadlines</p>
+                                <ul>
+                                    @foreach (var deadline in Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today))
+                                    {
+                                        <li>@deadline.DeadlineDate.ToShortDateString()</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <p>There are no more remaining deadlines</p>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p>There are no remaining deadlines</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button class="btn btn-secondary btn-block" type="button">Complete Competition</button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <LoadingSpinner />
+        }
+    </div>
+</div>

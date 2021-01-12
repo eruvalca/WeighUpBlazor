@@ -17,9 +17,9 @@ namespace WeighUpBlazor.Client.Services
             _client = client;
         }
 
-        public async Task<List<WeighInDeadline>> GetWeighInDeadlines()
+        public async Task<List<WeighInDeadline>> GetWeighInDeadlinesByCompetition(int id)
         {
-            return await _client.GetFromJsonAsync<List<WeighInDeadline>>("weighInDeadlines");
+            return await _client.GetFromJsonAsync<List<WeighInDeadline>>($"weighInDeadlines/competition/{id}");
         }
 
         public async Task<WeighInDeadline> GetWeighInDeadline(int id)

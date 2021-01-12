@@ -46,9 +46,9 @@ namespace WeighUpBlazor.Client.Pages
                 Username = user.FindFirst(c => c.Type == "name").Value;
             }
 
-            Contestant = await ContestantsService.GetContestant(UserId);
-            WeightLog.ContestantId = Contestant.ContestantId;
             Competition = await CompetitionsService.GetCompetition(CompetitionId);
+            Contestant = Competition.Contestants.FirstOrDefault(c => c.UserId == UserId);
+            WeightLog.ContestantId = Contestant.ContestantId;
         }
 
         private async Task HandleSubmit()

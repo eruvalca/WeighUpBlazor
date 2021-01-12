@@ -11,15 +11,13 @@ using WeighUpBlazor.Shared.Models;
 namespace WeighUpBlazor.Client.Shared
 {
     [Authorize]
-    public partial class CompetitionAttributesCard
+    public partial class CompetitionsDeadlineCard
     {
         [Inject]
         private NavigationManager Navigation { get; set; }
 
         [Parameter]
         public Competition Competition { get; set; }
-        [Parameter]
-        public bool IsContestantJoining { get; set; }
         [Parameter]
         public string UserId { get; set; }
         [Parameter]

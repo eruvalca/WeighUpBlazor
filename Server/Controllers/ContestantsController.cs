@@ -32,7 +32,10 @@ namespace WeighUpBlazor.Server.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<Contestant>> GetContestant(string userId)
         {
-            var contestant = await _context.Contestants.FirstOrDefaultAsync(c => c.UserId == userId);
+            var contestant = await _context.Contestants
+                .Where(c => c.UserId == userId)
+                .Include(c => c.WeightLogs)
+                .FirstOrDefaultAsync();
 
             if (contestant == null)
             {

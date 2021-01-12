@@ -21,10 +21,12 @@ namespace WeighUpBlazor.Server.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<WeighInDeadline>>> GetWeighInDeadlines()
+        [HttpGet("competition/{id}")]
+        public async Task<ActionResult<IEnumerable<WeighInDeadline>>> GetWeighInDeadlinesByCompetition(int id)
         {
-            return await _context.WeighInDeadlines.ToListAsync();
+            return await _context.WeighInDeadlines
+                .Where(w => w.CompetitionId == id && w.IsActive)
+                .ToListAsync();
         }
 
         [HttpGet("{id}")]
