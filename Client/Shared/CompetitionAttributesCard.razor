@@ -21,7 +21,7 @@
                 <span><strong>End Date:</strong> @Competition.EndDate.ToShortDateString()</span>
             </div>
         </div>
-        @if (DateTime.Today >= Competition.WeighInDeadlines.Where(w => w.IsActive).OrderBy(w => w.DeadlineDate).FirstOrDefault().DeadlineDate)
+        @if (DateTime.Today < Competition.WeighInDeadlines.Where(w => w.IsActive).OrderBy(w => w.DeadlineDate).FirstOrDefault().DeadlineDate)
         {
             <div class="row">
                 <div class="col-12">
