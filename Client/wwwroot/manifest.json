@@ -1,15 +1,24 @@
 {
   "name": "Weigh Up",
   "short_name": "Weigh Up",
+  "description": "Challenge friends and family to a Biggest Loser style weight loss challenge.",
+  "lang": "en-us",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#03173d",
+  "background_color": "#DDD",
+  "theme_color": "#B44",
+  "orientation": "any",
+  "categories": [ "health", "fitness", "social" ],
   "icons": [
     {
-      "src": "icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }

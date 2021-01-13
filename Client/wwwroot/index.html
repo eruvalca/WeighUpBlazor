@@ -5,12 +5,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Weigh Up</title>
+
     <base href="/" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="android-chrome-512x512.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="WeighUpBlazor.Client.styles.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
 </head>
 
 <body>
@@ -28,16 +34,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">App Update</h5>
+                    <h5 class="modal-title">Update</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>A new update is available. Select Refresh to install.</p>
+                    <p>A new update is available for Weigh Up. Please install to get the latest changes and prevent issues.</p>
                 </div>
                 <div class="modal-footer">
-                    <button id="reload" type="button" class="btn btn-primary">Refresh</button>
+                    <button id="reload" type="button" class="btn btn-primary">Install</button>
                 </div>
             </div>
         </div>
@@ -81,7 +87,6 @@
                 refreshing = true;
             });
         }
-        //navigator.serviceWorker.register('service-worker.js');
     </script>
 </body>
 
