@@ -24,11 +24,65 @@
         </div>
     </div>
 
+    <div id="update-modal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">App Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>A new update is available. Select Refresh to install.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="reload" type="button" class="btn btn-primary">Refresh</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/jquery.slim.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="_content/Microsoft.Authentication.WebAssembly.Msal/AuthenticationService.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        let newWorker;
+
+        // The click event on the pop up notification
+        document.getElementById('reload').addEventListener('click', function () {
+            newWorker.postMessage({ action: 'skipWaiting' });
+        });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').then(reg => {
+                reg.addEventListener('updatefound', () => {
+                    newWorker = reg.installing;
+
+                    newWorker.addEventListener('statechange', () => {
+                        switch (newWorker.state) {
+                            case 'installed':
+                                if (navigator.serviceWorker.controller) {
+                                    // new update available
+                                    $("#update-modal").modal('show');
+                                }
+                                // No update available
+                                break;
+                        }
+                    });
+                });
+            });
+
+            let refreshing;
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+                if (refreshing) return;
+                window.location.reload();
+                refreshing = true;
+            });
+        }
+        //navigator.serviceWorker.register('service-worker.js');
+    </script>
 </body>
 
 </html>
