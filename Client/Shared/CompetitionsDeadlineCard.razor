@@ -84,7 +84,7 @@
                     @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate > Competition.WeighInDeadlines.Where(wd => wd.IsActive).OrderBy(wd => wd.DeadlineDate).FirstOrDefault().DeadlineDate && w.IsActive))
                     {
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 text-center">
                                 <p><strong>Remaining Deadlines</strong></p>
                                 <ul>
                                     @foreach (var deadline in Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today && w.IsActive).OrderBy(w => w.DeadlineDate))
