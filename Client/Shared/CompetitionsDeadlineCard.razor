@@ -52,13 +52,7 @@
                     {
                         <div class="row">
                             <div class="col-12 text-center">
-                                <p><strong>Remaining Deadlines</strong></p>
-                                <ul>
-                                    @foreach (var deadline in Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today && w.IsActive).OrderBy(w => w.DeadlineDate))
-                                    {
-                                        <li>@deadline.DeadlineDate.ToShortDateString()</li>
-                                    }
-                                </ul>
+                                <p>@Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today && w.IsActive).Count() remaining deadlines</p>
                             </div>
                         </div>
                     }
@@ -85,13 +79,7 @@
                     {
                         <div class="row">
                             <div class="col-12 text-center">
-                                <p><strong>Remaining Deadlines</strong></p>
-                                <ul>
-                                    @foreach (var deadline in Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today && w.IsActive).OrderBy(w => w.DeadlineDate))
-                                    {
-                                        <li>@deadline.DeadlineDate.ToShortDateString()</li>
-                                    }
-                                </ul>
+                                <p>@Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today && w.IsActive).Count() remaining deadlines</p>
                             </div>
                         </div>
                     }

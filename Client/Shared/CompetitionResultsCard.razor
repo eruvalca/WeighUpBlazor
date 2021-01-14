@@ -1,0 +1,55 @@
+﻿
+<div class="card shadow">
+    <div class="card-header">
+        <h5>Results</h5>
+    </div>
+    <div class="card-body">
+        @if (Competition != null)
+        {
+            @if (CompleteDeadlines.Any())
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-striped table-borderless">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    @foreach (var deadline in CompleteDeadlines.OrderBy(d => d.DeadlineDate))
+                                    {
+                                        <th>@deadline.DeadlineDate.ToShortDateString()</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var contestant in Competition.Contestants)
+                                {
+                                    <tr>
+                                        <td>@contestant.Username</td>
+                                        @foreach (var deadline in CompleteDeadlines.OrderBy(d => d.DeadlineDate))
+                                        {
+                                            <td>
+                                                @(((contestant.WeightLogs.Where(w => w.MeasurementDate < deadline.DeadlineDate).OrderBy(w => w.MeasurementDate).FirstOrDefault().WeightMeasurement - contestant.WeightLogs.Where(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date).FirstOrDefault().WeightMeasurement) / contestant.WeightLogs.Where(w => w.MeasurementDate < deadline.DeadlineDate).OrderBy(w => w.MeasurementDate).FirstOrDefault().WeightMeasurement).ToString("P"))
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p>There are no results yet</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <LoadingSpinner />
+        }
+    </div>
+</div>
