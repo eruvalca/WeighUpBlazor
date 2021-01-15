@@ -61,32 +61,30 @@
             newWorker.postMessage({ action: 'skipWaiting' });
         });
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js').then(reg => {
-                reg.addEventListener('updatefound', () => {
-                    newWorker = reg.installing;
+        navigator.serviceWorker.register('service-worker.js').then(reg => {
+            reg.addEventListener('updatefound', () => {
+                newWorker = reg.installing;
 
-                    newWorker.addEventListener('statechange', () => {
-                        switch (newWorker.state) {
-                            case 'installed':
-                                if (navigator.serviceWorker.controller) {
-                                    // new update available
-                                    $("#update-modal").modal('show');
-                                }
-                                // No update available
-                                break;
-                        }
-                    });
+                newWorker.addEventListener('statechange', () => {
+                    switch (newWorker.state) {
+                        case 'installed':
+                            if (navigator.serviceWorker.controller) {
+                                // new update available
+                                $("#update-modal").modal('show');
+                            }
+                            // No update available
+                            break;
+                    }
                 });
             });
+        });
 
-            let refreshing;
-            navigator.serviceWorker.addEventListener('controllerchange', function () {
-                if (refreshing) return;
-                window.location.reload();
-                refreshing = true;
-            });
-        }
+        let refreshing;
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+            if (refreshing) return;
+            window.location.reload();
+            refreshing = true;
+        });
     </script>
 </body>
 
