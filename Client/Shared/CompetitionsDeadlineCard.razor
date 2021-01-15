@@ -69,13 +69,13 @@
                 {
                     <div class="row">
                         <div class="col-12 text-center">
-                            <p>Next deadline is <strong>@Competition.WeighInDeadlines.Where(w => w.IsActive).OrderBy(w => w.DeadlineDate).FirstOrDefault().DeadlineDate.ToShortDateString()</strong></p>
+                            <p>Next deadline is <strong>@Competition.WeighInDeadlines.Where(w => w.IsActive && w.DeadlineDate.Date != Competition.StartDate.Date).OrderBy(w => w.DeadlineDate).FirstOrDefault().DeadlineDate.ToShortDateString()</strong></p>
                         </div>
                     </div>
 
                     <hr />
 
-                    @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate > Competition.WeighInDeadlines.Where(wd => wd.IsActive).OrderBy(wd => wd.DeadlineDate).FirstOrDefault().DeadlineDate && w.IsActive))
+                    @if (Competition.WeighInDeadlines.Any(w => w.IsActive && w.DeadlineDate > (Competition.WeighInDeadlines.Where(wd => wd.IsActive && wd.DeadlineDate.Date != Competition.StartDate.Date).OrderBy(wd => wd.DeadlineDate).FirstOrDefault().DeadlineDate)))
                     {
                         <div class="row">
                             <div class="col-12 text-center">

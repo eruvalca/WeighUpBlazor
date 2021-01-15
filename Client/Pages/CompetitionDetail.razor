@@ -24,7 +24,9 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <CompetitionResultsCard CompetitionId="@Competition.CompetitionId" />
+                    <CompetitionsDeadlineCard Competition="@Competition"
+                                              UserId="@UserId"
+                                              HandleContestantJoin="@HandleContestantJoin" />
                 </div>
             </div>
         </div>
@@ -32,9 +34,7 @@
         <div class="col-12 col-md-6">
             <div class="row">
                 <div class="col-12">
-                    <CompetitionsDeadlineCard Competition="@Competition"
-                                              UserId="@UserId"
-                                              HandleContestantJoin="@HandleContestantJoin" />
+                    <CompetitionResultsCard CompetitionId="@Competition.CompetitionId" />
                 </div>
             </div>
         </div>
