@@ -11,6 +11,7 @@ using WeighUpBlazor.Shared.Models;
 
 namespace WeighUpBlazor.Server.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class CompetitionsController : ControllerBase
@@ -30,7 +31,6 @@ namespace WeighUpBlazor.Server.Controllers
                 .ToListAsync();
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Competition>> GetCompetition(int id)
         {
@@ -48,7 +48,6 @@ namespace WeighUpBlazor.Server.Controllers
                 .FirstOrDefaultAsync(c => c.CompetitionId == id);
         }
 
-        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompetition(int id, Competition competition)
         {
@@ -85,7 +84,6 @@ namespace WeighUpBlazor.Server.Controllers
             return NoContent();
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Competition>> PostCompetition(Competition competition)
         {
@@ -95,7 +93,6 @@ namespace WeighUpBlazor.Server.Controllers
             return CreatedAtAction("GetCompetition", new { id = competition.CompetitionId }, competition);
         }
 
-        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompetition(int id)
         {
