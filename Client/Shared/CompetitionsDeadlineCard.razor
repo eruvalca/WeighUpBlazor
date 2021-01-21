@@ -6,9 +6,9 @@
     <div class="card-body">
         @if (Competition != null)
         {
-            @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate >= DateTime.Today && w.IsActive))
+            @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate.Date >= DateTime.Today && w.IsActive))
             {
-                @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate == DateTime.Today && w.IsActive))
+                @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate.Date == DateTime.Today && w.IsActive))
                 {
                     @if (Competition.Contestants.Any(c => c.UserId == UserId))
                     {
@@ -48,11 +48,11 @@
 
                     <hr />
 
-                    @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate > DateTime.Today && w.IsActive))
+                    @if (Competition.WeighInDeadlines.Any(w => w.DeadlineDate.Date > DateTime.Today && w.IsActive))
                     {
                         <div class="row">
                             <div class="col-12 text-center">
-                                <p>@Competition.WeighInDeadlines.Where(w => w.DeadlineDate > DateTime.Today && w.IsActive).Count() remaining deadlines</p>
+                                <p>@Competition.WeighInDeadlines.Where(w => w.DeadlineDate.Date > DateTime.Today && w.IsActive).Count() remaining deadlines</p>
                             </div>
                         </div>
                     }
@@ -69,7 +69,7 @@
                 {
                     <div class="row">
                         <div class="col-12 text-center">
-                            <p>Next deadline is <strong>@Competition.WeighInDeadlines.Where(w => w.IsActive && w.DeadlineDate.Date != Competition.StartDate.Date).OrderBy(w => w.DeadlineDate).FirstOrDefault().DeadlineDate.ToShortDateString()</strong></p>
+                            <p>Next deadline is <strong>@Competition.WeighInDeadlines.Where(w => w.IsActive && w.DeadlineDate.Date != Competition.StartDate.Date && w.DeadlineDate.Date > DateTime.Today).OrderBy(w => w.DeadlineDate.Date).FirstOrDefault().DeadlineDate.ToShortDateString()</strong></p>
                         </div>
                     </div>
 

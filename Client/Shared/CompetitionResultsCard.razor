@@ -28,7 +28,7 @@
                                         @foreach (var deadline in CompleteDeadlines.OrderBy(d => d.DeadlineDate))
                                         {
                                             <td>
-                                                @(((contestant.WeightLogs.Where(w => w.MeasurementDate < deadline.DeadlineDate).OrderBy(w => w.MeasurementDate).FirstOrDefault().WeightMeasurement - contestant.WeightLogs.Where(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date).FirstOrDefault().WeightMeasurement) / contestant.WeightLogs.Where(w => w.MeasurementDate < deadline.DeadlineDate).OrderBy(w => w.MeasurementDate).FirstOrDefault().WeightMeasurement).ToString("P"))
+                                                @(((contestant.WeightLogs.Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date).OrderByDescending(w => w.MeasurementDate).FirstOrDefault().WeightMeasurement - contestant.WeightLogs.Where(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date).FirstOrDefault().WeightMeasurement) / contestant.WeightLogs.Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date).OrderByDescending(w => w.MeasurementDate).FirstOrDefault().WeightMeasurement).ToString("P"))
                                             </td>
                                         }
                                     </tr>
