@@ -6,7 +6,7 @@
     <div class="card-body">
         @if (Competition != null)
         {
-            @if (CompleteDeadlines.Any())
+            @if (CompetitionResults.Any())
             {
                 <div class="row">
                     <div class="col-12">
@@ -21,27 +21,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var deadline in CompleteDeadlines.OrderBy(d => d.DeadlineDate))
+                                @foreach (var deadline in CompetitionResults)
                                 {
                                     <tr>
-                                        <td><strong>@deadline.DeadlineDate.ToString("M/d")</strong></td>
-                                        @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
+                                        <td><strong>@deadline.Key.DeadlineDate.ToString("M/d")</strong></td>
+                                        @foreach (var contestantResult in deadline.Value.OrderBy(c => c.Contestant.Username))
                                         {
-                                            <td>
-                                                @(((contestant.WeightLogs
-                                                                .Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date)
-                                                                .OrderByDescending(w => w.MeasurementDate)
-                                                                .FirstOrDefault().WeightMeasurement
-                                                                -
-                                                                contestant.WeightLogs
-                                                                            .Where(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date)
-                                                                            .FirstOrDefault().WeightMeasurement)
-                                                                            /
-                                                                            contestant.WeightLogs
-                                                                                        .Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date)
-                                                                                        .OrderByDescending(w => w.MeasurementDate)
-                                                                                        .FirstOrDefault().WeightMeasurement).ToString("P2"))
-                                            </td>
+                                            @if (contestantResult.IsDeadlineWinner)
+                                            {
+                                                <td class="text-success">@contestantResult.PercentChange.ToString("P2")</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@contestantResult.PercentChange.ToString("P2")</td>
+                                            }
                                         }
                                     </tr>
                                 }

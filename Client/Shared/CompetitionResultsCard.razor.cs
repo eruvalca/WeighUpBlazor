@@ -17,38 +17,12 @@ namespace WeighUpBlazor.Client.Shared
         public int CompetitionId { get; set; }
 
         private Competition Competition { get; set; }
-        private List<WeighInDeadline> CompleteDeadlines { get; set; } = new List<WeighInDeadline>();
+        private Dictionary<WeighInDeadline, List<ContestantResultSet>> CompetitionResults = new Dictionary<WeighInDeadline, List<ContestantResultSet>>();
 
         protected async override Task OnInitializedAsync()
         {
             Competition = await CompetitionsService.GetCompetition(CompetitionId);
-            SetupPage();
-        }
-
-        private void SetupPage()
-        {
-            var relevantDeadlines = Competition.WeighInDeadlines
-                .Where(w => w.IsActive && w.DeadlineDate.Date != Competition.StartDate.Date && w.DeadlineDate.Date <= DateTime.Today)
-                .OrderBy(w => w.DeadlineDate.Date)
-                .ToList();
-
-            foreach (var deadline in relevantDeadlines)
-            {
-                var deadlineComplete = true;
-
-                foreach (var contestant in Competition.Contestants)
-                {
-                    if (!contestant.WeightLogs.Any(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date))
-                    {
-                        deadlineComplete = false;
-                    }
-                }
-
-                if (deadlineComplete)
-                {
-                    CompleteDeadlines.Add(deadline);
-                }
-            }
+            CompetitionResults = Competition.GetResults();
         }
     }
 }
