@@ -17,7 +17,6 @@ namespace WeighUpBlazor.Client.Shared
         public int CompetitionId { get; set; }
 
         private Competition Competition { get; set; }
-        private List<WeighInDeadline> RelevantDeadlines { get; set; }
         private List<WeighInDeadline> CompleteDeadlines { get; set; } = new List<WeighInDeadline>();
 
         protected async override Task OnInitializedAsync()
@@ -28,12 +27,12 @@ namespace WeighUpBlazor.Client.Shared
 
         private void SetupPage()
         {
-            RelevantDeadlines = Competition.WeighInDeadlines
-                .Where(w => w.IsActive && w.DeadlineDate.Date != Competition.StartDate.Date && w.DeadlineDate <= DateTime.Today)
-                .OrderBy(w => w.DeadlineDate)
+            var relevantDeadlines = Competition.WeighInDeadlines
+                .Where(w => w.IsActive && w.DeadlineDate.Date != Competition.StartDate.Date && w.DeadlineDate.Date <= DateTime.Today)
+                .OrderBy(w => w.DeadlineDate.Date)
                 .ToList();
 
-            foreach (var deadline in RelevantDeadlines)
+            foreach (var deadline in relevantDeadlines)
             {
                 var deadlineComplete = true;
 

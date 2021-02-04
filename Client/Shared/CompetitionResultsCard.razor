@@ -10,25 +10,37 @@
             {
                 <div class="row">
                     <div class="col-12">
-                        <table class="table table-sm table-striped table-borderless">
+                        <table class="table table-sm table-striped table-borderless table-responsive">
                             <thead>
                                 <tr>
                                     <th></th>
-                                    @foreach (var deadline in CompleteDeadlines.OrderBy(d => d.DeadlineDate))
+                                    @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
                                     {
-                                        <th>@deadline.DeadlineDate.ToShortDateString()</th>
+                                        <th>@contestant.Username</th>
                                     }
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var contestant in Competition.Contestants)
+                                @foreach (var deadline in CompleteDeadlines.OrderBy(d => d.DeadlineDate))
                                 {
                                     <tr>
-                                        <td>@contestant.Username</td>
-                                        @foreach (var deadline in CompleteDeadlines.OrderBy(d => d.DeadlineDate))
+                                        <td><strong>@deadline.DeadlineDate.ToString("M/d")</strong></td>
+                                        @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
                                         {
                                             <td>
-                                                @(((contestant.WeightLogs.Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date).OrderByDescending(w => w.MeasurementDate).FirstOrDefault().WeightMeasurement - contestant.WeightLogs.Where(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date).FirstOrDefault().WeightMeasurement) / contestant.WeightLogs.Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date).OrderByDescending(w => w.MeasurementDate).FirstOrDefault().WeightMeasurement).ToString("P"))
+                                                @(((contestant.WeightLogs
+                                                                .Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date)
+                                                                .OrderByDescending(w => w.MeasurementDate)
+                                                                .FirstOrDefault().WeightMeasurement
+                                                                -
+                                                                contestant.WeightLogs
+                                                                            .Where(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date)
+                                                                            .FirstOrDefault().WeightMeasurement)
+                                                                            /
+                                                                            contestant.WeightLogs
+                                                                                        .Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date)
+                                                                                        .OrderByDescending(w => w.MeasurementDate)
+                                                                                        .FirstOrDefault().WeightMeasurement).ToString("P2"))
                                             </td>
                                         }
                                     </tr>
