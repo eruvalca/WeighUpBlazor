@@ -45,6 +45,7 @@ namespace WeighUpBlazor.Client.Pages
             }
 
             Competition = await CompetitionsService.GetCompetition(CompetitionId);
+            Competition.CreateDate.ToLocalTime();
         }
 
         public async Task HandleContestantJoin()

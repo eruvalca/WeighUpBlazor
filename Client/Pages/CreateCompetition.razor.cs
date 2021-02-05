@@ -143,6 +143,7 @@ namespace WeighUpBlazor.Client.Pages
         private async Task HandleSubmit()
         {
             IsFormSubmitting = true;
+            Competition.CreateDate = Competition.CreateDate.ToUniversalTime();
             Competition.CreatedBy = Username;
             Competition.CreatedByUserId = UserId;
 

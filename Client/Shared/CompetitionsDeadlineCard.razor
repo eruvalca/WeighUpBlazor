@@ -12,7 +12,7 @@
                 {
                     @if (Competition.Contestants.Any(c => c.UserId == UserId))
                     {
-                        @if (Competition.Contestants.FirstOrDefault(c => c.UserId == UserId).WeightLogs.Any(w => w.MeasurementDate.Date == DateTime.Today))
+                        @if (Competition.Contestants.FirstOrDefault(c => c.UserId == UserId).WeightLogs.Any(w => w.MeasurementDate.ToLocalTime().Date == DateTime.Today))
                         {
                             <div class="row">
                                 <div class="col-12 text-center">

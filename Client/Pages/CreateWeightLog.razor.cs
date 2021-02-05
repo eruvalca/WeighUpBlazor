@@ -29,7 +29,6 @@ namespace WeighUpBlazor.Client.Pages
         private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         private string UserId { get; set; }
-        private string Username { get; set; }
         private Competition Competition { get; set; } = new Competition();
         private Contestant Contestant { get; set; }
         private WeightLog WeightLog { get; set; } = new WeightLog();
@@ -43,7 +42,6 @@ namespace WeighUpBlazor.Client.Pages
             if (user.Identity.IsAuthenticated)
             {
                 UserId = user.FindFirst(c => c.Type == "sub").Value;
-                Username = user.FindFirst(c => c.Type == "name").Value;
             }
 
             Competition = await CompetitionsService.GetCompetition(CompetitionId);
@@ -54,6 +52,7 @@ namespace WeighUpBlazor.Client.Pages
         private async Task HandleSubmit()
         {
             IsFormSubmitting = true;
+            WeightLog.MeasurementDate = WeightLog.MeasurementDate.ToUniversalTime();
             WeightLog = await WeightLogsService.PostWeightLog(WeightLog);
             Navigation.NavigateTo($"competition-detail/{Competition.CompetitionId}");
         }

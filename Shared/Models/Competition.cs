@@ -37,7 +37,7 @@ namespace WeighUpBlazor.Shared.Models
 
                 foreach (var contestant in Contestants)
                 {
-                    if (!contestant.WeightLogs.Any(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date))
+                    if (!contestant.WeightLogs.Any(w => w.MeasurementDate.ToLocalTime().Date == deadline.DeadlineDate.Date))
                     {
                         deadlineComplete = false;
                     }
@@ -59,11 +59,11 @@ namespace WeighUpBlazor.Shared.Models
                     {
                         Contestant = contestant,
                         PreviousWeightMeasurement = contestant.WeightLogs
-                            .Where(w => w.MeasurementDate.Date < deadline.DeadlineDate.Date)
-                            .OrderByDescending(w => w.MeasurementDate)
+                            .Where(w => w.MeasurementDate.ToLocalTime().Date < deadline.DeadlineDate.Date)
+                            .OrderByDescending(w => w.MeasurementDate.ToLocalTime())
                             .FirstOrDefault().WeightMeasurement,
                         DeadlineWeightMeasurement = contestant.WeightLogs
-                            .Where(w => w.MeasurementDate.Date == deadline.DeadlineDate.Date)
+                            .Where(w => w.MeasurementDate.ToLocalTime().Date == deadline.DeadlineDate.Date)
                             .FirstOrDefault().WeightMeasurement
                     };
 
