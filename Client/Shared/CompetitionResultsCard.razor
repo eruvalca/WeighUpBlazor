@@ -31,6 +31,10 @@
                                             {
                                                 <td class="text-success"><strong>@contestantResult.PercentChange.ToString("P2")</strong></td>
                                             }
+                                            else if (contestantResult.PercentChange < 0)
+                                            {
+                                                <td class="text-danger"><strong>@contestantResult.PercentChange.ToString("P2")</strong></td>
+                                            }
                                             else
                                             {
                                                 <td>@contestantResult.PercentChange.ToString("P2")</td>
