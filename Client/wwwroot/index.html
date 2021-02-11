@@ -19,20 +19,12 @@
 </head>
 
 <body>
-    <div id="app" style="display:none">
+    <div id="app">
         <div class="row">
             <div class="col-12 text-center">
                 <div id="pre-app-loading-spinner" class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="pre-app-div" class="row">
-        <div class="col-12 text-center">
-            <div id="pre-app-loading-spinner" class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
             </div>
         </div>
     </div>
@@ -78,11 +70,8 @@
                             if (navigator.serviceWorker.controller) {
                                 // new update available
                                 $("#update-modal").modal('show');
-                                $("#pre-app-div").hide();
                             }
                             // No update available
-                            $("#pre-app-div").hide();
-                            $("#app").show();
                             break;
                     }
                 });
