@@ -1,0 +1,69 @@
+﻿
+<div class="card shadow">
+    <div class="card-header">
+        <h5>Winnings</h5>
+    </div>
+    <div class="card-body">
+        @if (Competition != null)
+        {
+            <div class="row">
+                <div class="col-4 text-center">
+                    <p><strong>Total Pool</strong></p>
+                    <p class="text-success">@((Competition.PlayInAmount * Competition.Contestants.Count).ToString("C"))</p>
+                </div>
+                <div class="col-4 text-center">
+                    <p><strong>Weekly Prize</strong></p>
+                    <p class="text-success">$20</p>
+                </div>
+                <div class="col-4 text-center">
+                    <p><strong>Grand Prize</strong></p>
+                    <p class="text-success">$400</p>
+                </div>
+            </div>
+
+            @if (CompetitionResults.Any())
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6><strong>Winnings Tracker</strong></h6>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-striped table-borderless">
+                            <thead>
+                                <tr>
+                                    @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
+                                    {
+                                        <th>@contestant.Username</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
+                                    {
+                                        <td>@((CompetitionResults.SelectMany(cr => cr.Value).Where(v => v.Contestant.ContestantId == contestant.ContestantId && v.IsDeadlineWinner).Count() * 20).ToString("C"))</td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p>There are no winnings awarded yet</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <LoadingSpinner />
+        }
+    </div>
+</div>
