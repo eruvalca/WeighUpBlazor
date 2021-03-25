@@ -22,7 +22,7 @@ namespace WeighUpBlazor.Client.Shared
         protected async override Task OnInitializedAsync()
         {
             Competition = await CompetitionsService.GetCompetition(CompetitionId);
-            CompetitionResults = Competition.GetResults();
+            CompetitionResults = Competition.GetWeeklyResults();
         }
     }
 }

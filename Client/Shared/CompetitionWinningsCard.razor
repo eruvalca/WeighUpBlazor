@@ -25,7 +25,7 @@
             {
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h6><strong>Winnings Tracker</strong></h6>
+                        <h6><strong>Weekly Winnings Tracker</strong></h6>
                     </div>
                 </div>
 
@@ -45,6 +45,46 @@
                                     @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
                                     {
                                         <td>@((CompetitionResults.SelectMany(cr => cr.Value).Where(v => v.Contestant.ContestantId == contestant.ContestantId && v.IsDeadlineWinner).Count() * 20).ToString("C"))</td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p>There are no winnings awarded yet</p>
+                    </div>
+                </div>
+            }
+
+            @if (FinalResults != null)
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6><strong>Final Winnings</strong></h6>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-striped table-borderless">
+                            <thead>
+                                <tr>
+                                    @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
+                                    {
+                                        <th>@contestant.Username</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @foreach (var contestant in FinalResults.TotalWinnings.OrderBy(t => t.Value.Username))
+                                    {
+                                        <td>@(contestant.Key.ToString("C"))</td>
                                     }
                                 </tr>
                             </tbody>

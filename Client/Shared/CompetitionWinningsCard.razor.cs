@@ -17,10 +17,16 @@ namespace WeighUpBlazor.Client.Shared
         public Competition Competition { get; set; }
 
         private Dictionary<WeighInDeadline, List<ContestantResultSet>> CompetitionResults = new Dictionary<WeighInDeadline, List<ContestantResultSet>>();
+        private FinalResultSet FinalResults;
 
-        protected async override Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            CompetitionResults = Competition.GetResults();
+            CompetitionResults = Competition.GetWeeklyResults();
+
+            if (DateTime.Today.ToUniversalTime().Date >= Competition.EndDate.Date)
+            {
+                FinalResults = Competition.GetFinalResult();
+            }
         }
     }
 }

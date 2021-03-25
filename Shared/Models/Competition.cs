@@ -21,7 +21,7 @@ namespace WeighUpBlazor.Shared.Models
         public List<Contestant> Contestants { get; set; }
         public List<WeighInDeadline> WeighInDeadlines { get; set; }
 
-        public Dictionary<WeighInDeadline, List<ContestantResultSet>> GetResults()
+        public Dictionary<WeighInDeadline, List<ContestantResultSet>> GetWeeklyResults()
         {
             var results = new Dictionary<WeighInDeadline, List<ContestantResultSet>>();
             var completeDeadlines = new List<WeighInDeadline>();
@@ -78,6 +78,87 @@ namespace WeighUpBlazor.Shared.Models
             }
 
             return results;
+        }
+
+        public FinalResultSet GetFinalResult()
+        {
+            var result = new FinalResultSet
+            {
+                PercentWinners = new Dictionary<decimal, Contestant>(),
+                TotalWinnings = new Dictionary<decimal, Contestant>()
+            };
+
+            var weekResults = new Dictionary<WeighInDeadline, List<ContestantResultSet>>();
+
+            foreach (var deadline in WeighInDeadlines)
+            {
+                var deadlineSet = new List<ContestantResultSet>();
+
+                foreach (var contestant in Contestants)
+                {
+                    var contestantResultSet = new ContestantResultSet
+                    {
+                        Contestant = contestant,
+                        PreviousWeightMeasurement = contestant.WeightLogs
+                            .Where(w => w.MeasurementDate.ToLocalTime().Date < deadline.DeadlineDate.Date)
+                            .OrderByDescending(w => w.MeasurementDate.ToLocalTime())
+                            .FirstOrDefault().WeightMeasurement,
+                        DeadlineWeightMeasurement = contestant.WeightLogs
+                            .Where(w => w.MeasurementDate.ToLocalTime().Date == deadline.DeadlineDate.Date)
+                            .FirstOrDefault().WeightMeasurement
+                    };
+
+                    contestantResultSet.CalculatePercentChange();
+
+                    deadlineSet.Add(contestantResultSet);
+                }
+
+                deadlineSet.OrderByDescending(d => d.PercentChange).FirstOrDefault().IsDeadlineWinner = true;
+
+                weekResults.Add(deadline, deadlineSet);
+            }
+
+            foreach (var contestant in Contestants)
+            {
+                var firstWeightLog = contestant.WeightLogs
+                    .Where(w => w.MeasurementDate.Date == StartDate.Date)
+                    .FirstOrDefault();
+
+                var finalWeightLog = contestant.WeightLogs
+                    .Where(w => w.MeasurementDate.Date == EndDate.Date)
+                    .FirstOrDefault();
+
+                var lossDifferencePct = (firstWeightLog.WeightMeasurement - finalWeightLog.WeightMeasurement) / firstWeightLog.WeightMeasurement;
+
+                if ((lossDifferencePct * 100) >= 10)
+                {
+                    result.PercentWinners.Add(lossDifferencePct, contestant);
+                }
+            }
+
+            var totalPctOverTen = result.PercentWinners.Sum(p => p.Key);
+
+            foreach (var contestant in Contestants)
+            {
+                decimal pctWinnings = 0;
+
+                if (result.PercentWinners.ContainsValue(contestant))
+                {
+                    var pctOfTotalPctOverTen = result.PercentWinners
+                        .Where(p => p.Value == contestant)
+                        .FirstOrDefault().Key / totalPctOverTen;
+
+                    pctWinnings = 300 * pctOfTotalPctOverTen;
+                }
+
+                result.TotalWinnings.Add((weekResults.SelectMany(cr => cr.Value)
+                                            .Where(v => v.Contestant.ContestantId == contestant.ContestantId && v.IsDeadlineWinner)
+                                            .Count() * 20) + pctWinnings, contestant);
+            }
+
+            result.CompetitionWinner = result.PercentWinners.OrderByDescending(p => p.Key).FirstOrDefault().Value;
+
+            return result;
         }
     }
 }
