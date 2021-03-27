@@ -16,5 +16,31 @@ namespace WeighUpBlazor.Shared.Models
 
         public int CompetitionId { get; set; }
         public List<WeightLog> WeightLogs { get; set; }
+
+        public decimal GetInitialWeight()
+        {
+            return WeightLogs.OrderBy(w => w.MeasurementDate.Date)
+                .ThenBy(w => w.WeightLogId)
+                .FirstOrDefault().WeightMeasurement;
+        }
+
+        public decimal GetFinalWeight()
+        {
+            return WeightLogs.OrderByDescending(w => w.MeasurementDate.Date)
+                .ThenByDescending(w => w.WeightLogId)
+                .FirstOrDefault().WeightMeasurement;
+        }
+
+        public decimal GetTotalWeightLost()
+        {
+            return GetInitialWeight() - GetFinalWeight();
+        }
+
+        public decimal GetTotalPctLost()
+        {
+            var initialWeight = GetInitialWeight();
+
+            return (initialWeight - GetFinalWeight()) / initialWeight;
+        }
     }
 }

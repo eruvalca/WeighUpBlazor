@@ -23,7 +23,8 @@ namespace WeighUpBlazor.Client.Shared
         {
             CompetitionResults = Competition.GetWeeklyResults();
 
-            if (DateTime.Today.ToUniversalTime().Date >= Competition.EndDate.Date)
+            if (Competition.Contestants.All(c => c.WeightLogs.Any(w => w.MeasurementDate.Date == Competition.EndDate.Date))
+                && DateTime.Today.ToUniversalTime().Date >= Competition.EndDate.Date)
             {
                 FinalResults = Competition.GetFinalResult();
             }

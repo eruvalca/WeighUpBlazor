@@ -9,6 +9,12 @@
             @if (CompetitionResults.Any())
             {
                 <div class="row">
+                    <div class="col-12 text-center">
+                        <h6><strong>Weekly Results</strong></h6>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-12">
                         <table class="table table-sm table-striped table-borderless table-responsive-sm">
                             <thead>
@@ -54,6 +60,76 @@
                         <p>There are no results yet</p>
                     </div>
                 </div>
+            }
+
+
+            if (Competition.Contestants.All(c => c.WeightLogs.Any(w => w.MeasurementDate.Date == Competition.EndDate.Date))
+                && DateTime.Today.ToUniversalTime().Date >= Competition.EndDate.Date)
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6><strong>Final Results</strong></h6>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-striped table-borderless table-responsive-sm">
+                            <thead>
+                                <tr>
+                                    @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
+                                    {
+                                        <th>@contestant.Username</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
+                                {
+                                    <tr>
+                                            @if (Competition.Contestants.OrderByDescending(c => c.GetTotalPctLost()).FirstOrDefault() == contestant)
+                                            {
+                                                <td class="text-success"><strong>@contestant.GetTotalWeightLost().ToString() / @contestant.GetTotalPctLost().ToString("P2")</strong></td>
+                                            }
+                                            else if (contestant.GetTotalPctLost() < 0)
+                                            {
+                                                <td class="text-danger"><strong>@contestant.GetTotalWeightLost().ToString() / @contestant.GetTotalPctLost().ToString("P2")</strong></td>
+                                            }
+                                            else
+                                            {
+                                                <td><strong>@contestant.GetTotalWeightLost().ToString() / @contestant.GetTotalPctLost().ToString("P2")</strong></td>
+                                            }
+                                    </tr>
+                                }
+                                @foreach (var deadline in CompetitionResults)
+                                {
+                                    <tr>
+                                        <td><strong>@deadline.Key.DeadlineDate.ToString("M/d")</strong></td>
+                                        @foreach (var contestantResult in deadline.Value.OrderBy(c => c.Contestant.Username))
+                                        {
+                                            @if (contestantResult.IsDeadlineWinner)
+                                            {
+                                                <td class="text-success"><strong>@contestantResult.PercentChange.ToString("P2")</strong></td>
+                                            }
+                                            else if (contestantResult.PercentChange < 0)
+                                            {
+                                                <td class="text-danger"><strong>@contestantResult.PercentChange.ToString("P2")</strong></td>
+                                            }
+                                            else
+                                            {
+                                                <td>@contestantResult.PercentChange.ToString("P2")</td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+
             }
         }
         else
