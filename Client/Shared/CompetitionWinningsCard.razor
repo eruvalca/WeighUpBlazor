@@ -44,7 +44,7 @@
                                 <tr>
                                     @foreach (var contestant in Competition.Contestants.OrderBy(c => c.Username))
                                     {
-                                        <td>@((CompetitionResults.SelectMany(cr => cr.Value).Where(v => v.Contestant.ContestantId == contestant.ContestantId && v.IsDeadlineWinner).Count() * 20).ToString("C"))</td>
+                                        <td>@((CompetitionResults.Where(r => r.Key.DeadlineDate.Date != Competition.EndDate.Date).SelectMany(cr => cr.Value).Where(v => v.Contestant.ContestantId == contestant.ContestantId && v.IsDeadlineWinner).Count() * 20).ToString("C"))</td>
                                     }
                                 </tr>
                             </tbody>

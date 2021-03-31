@@ -23,11 +23,6 @@ namespace WeighUpBlazor.Client.Shared
         {
             CompetitionResults = Competition.GetWeeklyResults();
 
-            CheckFinal();
-        }
-
-        private void CheckFinal()
-        {
             if (Competition.Contestants.All(c => c.WeightLogs.Any(w => w.MeasurementDate.Date == Competition.EndDate.Date))
                 && DateTime.Today.ToUniversalTime().Date >= Competition.EndDate.Date)
             {

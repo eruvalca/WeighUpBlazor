@@ -27,7 +27,7 @@ namespace WeighUpBlazor.Shared.Models
             var completeDeadlines = new List<WeighInDeadline>();
 
             var relevantDeadlines = WeighInDeadlines
-                .Where(w => w.IsActive && w.DeadlineDate.Date != StartDate.Date && w.DeadlineDate.Date <= DateTime.Today.Date && w.DeadlineDate != EndDate.Date)
+                .Where(w => w.IsActive && w.DeadlineDate.Date != StartDate.Date && w.DeadlineDate.Date <= DateTime.Today.Date)
                 .OrderBy(w => w.DeadlineDate.Date)
                 .ToList();
 
