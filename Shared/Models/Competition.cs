@@ -27,7 +27,7 @@ namespace WeighUpBlazor.Shared.Models
             var completeDeadlines = new List<WeighInDeadline>();
 
             var relevantDeadlines = WeighInDeadlines
-                .Where(w => w.IsActive && w.DeadlineDate.Date != StartDate.Date && w.DeadlineDate.Date <= DateTime.Today.Date)
+                .Where(w => w.IsActive && w.DeadlineDate.Date != StartDate.Date && w.DeadlineDate.Date <= DateTime.Today.Date && w.DeadlineDate != EndDate.Date)
                 .OrderBy(w => w.DeadlineDate.Date)
                 .ToList();
 
@@ -84,13 +84,18 @@ namespace WeighUpBlazor.Shared.Models
         {
             var result = new FinalResultSet
             {
-                PercentWinners = new Dictionary<decimal, Contestant>(),
-                TotalWinnings = new Dictionary<decimal, Contestant>()
+                PercentWinners = new List<FinalContestantPercentage>(),
+                TotalWinnings = new List<FinalContestantWinnings>()
             };
 
             var weekResults = new Dictionary<WeighInDeadline, List<ContestantResultSet>>();
 
-            foreach (var deadline in WeighInDeadlines)
+            var relevantDeadlines = WeighInDeadlines
+                .Where(w => w.IsActive && w.DeadlineDate.Date != StartDate.Date && w.DeadlineDate.Date != EndDate.Date)
+                .OrderBy(w => w.DeadlineDate.Date)
+                .ToList();
+
+            foreach (var deadline in relevantDeadlines)
             {
                 var deadlineSet = new List<ContestantResultSet>();
 
@@ -132,31 +137,38 @@ namespace WeighUpBlazor.Shared.Models
 
                 if ((lossDifferencePct * 100) >= 10)
                 {
-                    result.PercentWinners.Add(lossDifferencePct, contestant);
+                    result.PercentWinners.Add(new FinalContestantPercentage { Percent = lossDifferencePct, Contestant = contestant });
                 }
             }
 
-            var totalPctOverTen = result.PercentWinners.Sum(p => p.Key);
+            var totalPctOverTen = result.PercentWinners.Sum(p => p.Percent);
 
             foreach (var contestant in Contestants)
             {
                 decimal pctWinnings = 0;
 
-                if (result.PercentWinners.ContainsValue(contestant))
+                if (result.PercentWinners.Any(p => p.Contestant.ContestantId == contestant.ContestantId))
                 {
                     var pctOfTotalPctOverTen = result.PercentWinners
-                        .Where(p => p.Value == contestant)
-                        .FirstOrDefault().Key / totalPctOverTen;
+                        .Where(p => p.Contestant.ContestantId == contestant.ContestantId)
+                        .FirstOrDefault().Percent / totalPctOverTen;
 
                     pctWinnings = 300 * pctOfTotalPctOverTen;
                 }
 
-                result.TotalWinnings.Add((weekResults.SelectMany(cr => cr.Value)
+                result.TotalWinnings.Add(new FinalContestantWinnings
+                {
+                    Winnings = (weekResults.SelectMany(cr => cr.Value)
                                             .Where(v => v.Contestant.ContestantId == contestant.ContestantId && v.IsDeadlineWinner)
-                                            .Count() * 20) + pctWinnings, contestant);
+                                            .Count() * 20) + pctWinnings,
+                    Contestant = contestant
+                });
             }
 
-            result.CompetitionWinner = result.PercentWinners.OrderByDescending(p => p.Key).FirstOrDefault().Value;
+            result.CompetitionWinner = result.PercentWinners.OrderByDescending(p => p.Percent).FirstOrDefault().Contestant;
+
+            result.TotalWinnings.Where(t => t.Contestant.ContestantId == result.CompetitionWinner.ContestantId)
+                .FirstOrDefault().Winnings += 400;
 
             return result;
         }

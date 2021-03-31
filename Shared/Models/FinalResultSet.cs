@@ -9,7 +9,19 @@ namespace WeighUpBlazor.Shared.Models
     public class FinalResultSet
     {
         public Contestant CompetitionWinner { get; set; }
-        public Dictionary<decimal, Contestant> PercentWinners { get; set; }
-        public Dictionary<decimal, Contestant> TotalWinnings { get; set; }
+        public List<FinalContestantPercentage> PercentWinners { get; set; }
+        public List<FinalContestantWinnings> TotalWinnings { get; set; }
+    }
+
+    public class FinalContestantWinnings
+    {
+        public decimal Winnings { get; set; }
+        public Contestant Contestant { get; set; }
+    }
+
+    public class FinalContestantPercentage
+    {
+        public decimal Percent { get; set; }
+        public Contestant Contestant { get; set; }
     }
 }

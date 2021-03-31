@@ -82,9 +82,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    @foreach (var contestant in FinalResults.TotalWinnings.OrderBy(t => t.Value.Username))
+                                    @foreach (var contestant in FinalResults.TotalWinnings.OrderBy(t => t.Contestant.Username))
                                     {
-                                        <td>@(contestant.Key.ToString("C"))</td>
+                                        <td>@(contestant.Winnings.ToString("C"))</td>
                                     }
                                 </tr>
                             </tbody>
